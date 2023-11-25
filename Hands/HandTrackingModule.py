@@ -7,13 +7,13 @@ class HandDetector():
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon= detectionCon
-        self.trackCon = trackCon
+        self.trackConf = trackCon
         
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(static_image_mode=self.mode,
                                         max_num_hands=self.maxHands,
                                         min_detection_confidence=self.detectionCon,
-                                        min_tracking_confidence=self.trackCon)
+                                        min_tracking_confidence=self.trackConf)
         self.mpDraw = mp.solutions.drawing_utils
 
 
@@ -35,10 +35,9 @@ class HandDetector():
             for id, lm in enumerate(myHand.landmark):
                 h,w,c = img.shape
                 cx, cy = int(lm.x*w), int(lm.y*h)
-                print(id, cx, cy)
                 lmList.append([id,cx,cy])
                 if draw:
-                    cv2.circle(img, (cx,cy), 15, (255,0,0), cv2.FILLED)
+                    cv2.circle(img, (cx,cy), 5, (255,0,0), cv2.FILLED)
 
         return lmList
 
@@ -52,9 +51,6 @@ def main():
         success, img = cap.read()
         img = detector.findHands(img)
         lmList = detector.findPosition(img)
-
-        if len(lmList) != 0:
-            print(lmList[4])
 
         cTime = time.time()
         fps = 1/(cTime-pTime)
